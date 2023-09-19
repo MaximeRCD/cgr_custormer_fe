@@ -1,0 +1,55 @@
+<div>
+    <div class="wrapper">
+        <!-- ========== Left Sidebar Start ========== -->
+        <div class="leftside-menu bg-dark">
+
+            <!-- Sidebar -left -->
+            <div class="h-100" id="leftside-menu-container" data-simplebar="">
+                <!-- Leftbar User -->
+                <div class="leftbar-user">
+                    <a href="pages-profile.html">
+                        <img src="assets/images/users/avatar-1.jpg" alt="user-image" height="42"
+                            class="rounded-circle shadow-sm">
+                        <span class="leftbar-user-name mt-2">Dominic Keller</span>
+                    </a>
+                </div>
+
+                <!--- Sidemenu -->
+                <ul class="side-nav" style="position: fixed; top: 3%">
+                    <!-- Sidebar Menu Toggle Button -->
+                    <li class="side-nav-title">Demo Application</li>
+                    <li class="side-nav-item">
+                        <a routerLink="customers" class="side-nav-link">
+                            <i class="ri-user-add-line"></i>
+                            <span> Liste des Clients </span>
+                        </a>
+                    </li>
+                </ul>
+                <ul class="side-nav" style="position: fixed; bottom: 1%;">
+                    <li class="side-nav-item">
+                        <a routerLink="profile" class="side-nav-link">
+                            <i class="ri-settings-3-line"></i>
+                            <span> Mon profil </span>
+                        </a>
+                    </li>
+                    <li class="side-nav-item">
+                        <a routerLink="" class="side-nav-link">
+                            <i class="ri-logout-box-line"></i>
+                            <span> LogOut </span>
+                        </a>
+                    </li>
+                </ul>
+                <!--- End Sidemenu -->
+                <div class="clearfix"></div>
+            </div>
+        </div>
+        <!-- ========== Left Sidebar End ========== -->
+    </div>
+</div>
+<div class="content-page">
+    <div class="content">
+        <div class="wrapper">
+            <router-outlet></router-outlet>
+        </div>
+    </div>
+</div>
