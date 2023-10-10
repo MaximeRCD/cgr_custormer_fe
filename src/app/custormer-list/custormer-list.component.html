@@ -153,7 +153,7 @@
                                         </div>
                                     </td>
                                     <td class="table-user">
-                                        <a href="javascript:void(0);" class="text-body fw-semibold">{{cli.name}}</a>
+                                        <a (click)="navigateTo(cli)" class="text-body fw-semibold">{{cli.name}}</a>
                                     </td>
                                     <td>
                                         {{cli.telephone}}
@@ -167,6 +167,7 @@
                                     <td>
                                         {{cli.nb_found}}
                                     </td>
+
                                     <td>
                                         <span [class.badge-success-lighten]="cli.active"
                                             [class.badge-danger-lighten]="!cli.active">

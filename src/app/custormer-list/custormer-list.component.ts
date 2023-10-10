@@ -1,5 +1,9 @@
-import { Component } from '@angular/core';
-import { all_clients, Client, FormClient } from "./customer-data";
+import { Component, OnInit } from '@angular/core';
+import { all_clients, Client, ClientIn, FormClient } from "./customer-data";
+import { HttpClient } from '@angular/common/http';
+import { ClientService } from './client-api.service'
+import { Router } from '@angular/router';
+
 
 interface StringDictionary {
   [index: string]: any;
@@ -11,9 +15,12 @@ interface StringDictionary {
   styleUrls: ['./custormer-list.component.css']
 })
 
-export class CustormerListComponent {
+export class CustormerListComponent implements OnInit {
 
-  clients = all_clients;
+  constructor(private client_api: ClientService, private router: Router) { }
+
+
+  clients: Client[] = [];
 
   form_client: FormClient = {
     name: '',
@@ -31,7 +38,7 @@ export class CustormerListComponent {
     nb_found: 0,
     active: false
   };
-  new_client: Client = {
+  new_client: ClientIn = {
     name: '',
     telephone: '',
     email: '',
@@ -48,6 +55,7 @@ export class CustormerListComponent {
     active: false
   };
   current_client: Client = {
+    _id: '',
     name: '',
     telephone: '',
     email: '',
@@ -63,6 +71,21 @@ export class CustormerListComponent {
     nb_found: 0,
     active: false
   };
+
+  navigateTo(item: Client) {
+    console.log(item)
+    this.router.navigate(['/home/needs', item._id]);
+  }
+
+  ngOnInit(): void {
+    this.loadClients();
+  }
+
+  loadClients(): void {
+    this.client_api.getClients().subscribe(
+      all_clients => this.clients = all_clients,
+      error => console.error('Error loading clients', error))
+  }
 
   getFilteredCriteria(criteres: any): string {
     const filtered: StringDictionary = {};
@@ -83,19 +106,26 @@ export class CustormerListComponent {
   }
 
   onSubmit(client?: Client) {
-    // Conversion des chaînes en tableaux :
-    this.new_client = this.formClientToClient(this.form_client);
+
+    this.new_client = this.formClientToClientIn(this.form_client);
     if (this.form_client.criteres.type_bien === null) {
       alert("Type de bien invalide !");
       return;
     }
-    if (client == undefined) {
-      this.clients.push(this.new_client);
+    console.log(this.new_client)
+    if (client != undefined) {
+      this.client_api.updateClient(client._id, this.new_client).subscribe(
+        client => console.log(client),
+        error => console.error('Error updating clients', error)
+      )
     }
     else {
-      all_clients[all_clients.indexOf(client)] = this.new_client;
+      this.client_api.createClient(this.new_client).subscribe(
+        client => console.log(client),
+        error => console.error('Error creating client', error)
+      )
     }
-
+    this.loadClients();
     console.log(this.clients);
 
   }
@@ -115,10 +145,16 @@ export class CustormerListComponent {
   }
 
   deleteClient(cli: Client) {
-    const index = this.clients.indexOf(cli);
-    if (index !== -1) {
-      this.clients.splice(index, 1);
-    }
+    // const index = this.clients.indexOf(cli);
+    // if (index !== -1) {
+    //   this.clients.splice(index, 1);
+    // }
+    this.client_api.deleteClient(cli._id).subscribe(
+      client => console.log(client),
+      error => console.error('Error deleting client', error)
+    )
+    this.loadClients();
+
   }
 
   editClient(cli: Client): void {
@@ -146,7 +182,7 @@ export class CustormerListComponent {
     };
   }
 
-  formClientToClient(formClient: FormClient): Client {
+  formClientToClientIn(formClient: FormClient): ClientIn {
     return {
       name: formClient.name,
       telephone: formClient.telephone,
@@ -155,14 +191,13 @@ export class CustormerListComponent {
         localisation: formClient.criteres.localisation.split(', ').map(s => s.trim()),
         code_postal: formClient.criteres.code_postal.split(', ').map(s => s.trim()),
         type_bien: this.validateAndSplitTypeBien(formClient.criteres.type_bien),
-        max_price: formClient.criteres.max_price,
-        min_price: formClient.criteres.min_price,
-        max_surface: formClient.criteres.max_surface,
-        min_surface: formClient.criteres.min_surface
+        max_price: String(formClient.criteres.max_price),
+        min_price: String(formClient.criteres.min_price),
+        max_surface: String(formClient.criteres.max_surface),
+        min_surface: String(formClient.criteres.min_surface)
       },
       nb_found: formClient.nb_found,
       active: formClient.active
     };
   }
-
 }

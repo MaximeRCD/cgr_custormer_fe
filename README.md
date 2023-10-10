@@ -25,3 +25,18 @@ Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To u
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+
+
+# Thème bootstrap
+
+### Localisation dans le projet
+Les fichiers associés au thème sont dans le dossier __./src/assets__
+
+### Build local et server web local
+En lançant la commande **ng build** le projet est buildé et envoyé dans le dossier /dist, puis en se rendant dans le dossier et en tappant la commande  **http server** il est possible de voir comment va rendre le projet
+
+### Création de l'image docker et problemes
+Lorsque je créé l'image docker avec la command **docker build . -t mytag:latest** et que je run le container, le theme bootstrap n'est pas appliqué.
+
+### Résolution du problème
+Pour résoudre ce probleme
