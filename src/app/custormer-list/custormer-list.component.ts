@@ -29,7 +29,7 @@ export class CustormerListComponent implements OnInit {
     criteres: {
       localisation: "",
       code_postal: "",
-      type_bien: "",
+      type_bien: [],
       max_price: '',
       min_price: '',
       max_surface: '',
@@ -171,7 +171,7 @@ export class CustormerListComponent implements OnInit {
       criteres: {
         localisation: client.criteres.localisation.join(', '),
         code_postal: client.criteres.code_postal.join(', '),
-        type_bien: client.criteres.type_bien.join(', '),
+        type_bien: client.criteres.type_bien,
         max_price: client.criteres.max_price,
         min_price: client.criteres.min_price,
         max_surface: client.criteres.max_surface,
@@ -190,7 +190,7 @@ export class CustormerListComponent implements OnInit {
       criteres: {
         localisation: formClient.criteres.localisation.split(', ').map(s => s.trim()),
         code_postal: formClient.criteres.code_postal.split(', ').map(s => s.trim()),
-        type_bien: this.validateAndSplitTypeBien(formClient.criteres.type_bien),
+        type_bien: formClient.criteres.type_bien,
         max_price: String(formClient.criteres.max_price),
         min_price: String(formClient.criteres.min_price),
         max_surface: String(formClient.criteres.max_surface),
@@ -200,4 +200,21 @@ export class CustormerListComponent implements OnInit {
       active: formClient.active
     };
   }
+
+  // Assuming you have initialized form_client.criteres.type_bien as an array.
+  // Initialize it like: form_client.criteres.type_bien = [];
+
+  updateTypeBien(event: any, type: string) {
+    if (event.target.checked) {
+      // Add the type to the array if it's checked.
+      this.form_client.criteres.type_bien.push(type);
+    } else {
+      // Remove the type from the array if it's unchecked.
+      const index = this.form_client.criteres.type_bien.indexOf(type);
+      if (index > -1) {
+        this.form_client.criteres.type_bien.splice(index, 1);
+      }
+    }
+  }
+
 }

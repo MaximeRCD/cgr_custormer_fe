@@ -40,7 +40,7 @@ export interface FormClient {
     criteres: {
         localisation: string,
         code_postal: string,
-        type_bien: string,
+        type_bien: string[],
         max_price: string,
         min_price: string,
         max_surface: string,

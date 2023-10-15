@@ -74,10 +74,16 @@
                                                         name="code_postal"
                                                         placeholder="Codes postaux (séparés par des virgules)"
                                                         [(ngModel)]="form_client.criteres.code_postal">
-                                                    <input class="form-control mt-2" type="text" id="type_bien"
-                                                        name="type_bien"
-                                                        placeholder="Types de bien (séparés par des virgules)"
-                                                        [(ngModel)]="form_client.criteres.type_bien">
+                                                    <!-- Checkboxes for Maison and Appartement -->
+                                                    <div class="mt-2 ">
+                                                        <input type="checkbox" id="maison" name="maison"
+                                                            (change)="updateTypeBien($event, 'Maison')">
+                                                        <label for="maison" class="mr-3">Maison</label>
+
+                                                        <input type="checkbox" id="appartement" name="appartement"
+                                                            (change)="updateTypeBien($event, 'Appartement')">
+                                                        <label for="appartement">Appartement</label>
+                                                    </div>
                                                     <input class="form-control mt-2" type="number" id="max_price"
                                                         name="max_price" placeholder="Prix maximum en €"
                                                         [(ngModel)]="form_client.criteres.max_price">
@@ -266,9 +272,19 @@
                         <input class="form-control mt-2" type="text" id="code_postal" name="code_postal"
                             placeholder="Codes postaux (séparés par des virgules)"
                             [(ngModel)]="form_client.criteres.code_postal">
-                        <input class="form-control mt-2" type="text" id="type_bien" name="type_bien"
-                            placeholder="Types de bien (séparés par des virgules)"
-                            [(ngModel)]="form_client.criteres.type_bien">
+                        <!-- Checkboxes for Maison and Appartement -->
+                        <div class="mt-2">
+                            <input type="checkbox" id="maison" name="maison"
+                                [checked]="form_client.criteres.type_bien.includes('Maison')"
+                                (change)="updateTypeBien($event, 'Maison')">
+                            <label for="maison" class="mr-3">Maison</label>
+
+                            <input type="checkbox" id="appartement" name="appartement"
+                                [checked]="form_client.criteres.type_bien.includes('Appartement')"
+                                (change)="updateTypeBien($event, 'Appartement')">
+                            <label for="appartement">Appartement</label>
+                        </div>
+
                         <input class="form-control mt-2" type="number" id="max_price" name="max_price"
                             placeholder="Prix maximum en €" [(ngModel)]="form_client.criteres.max_price">
                         <input class="form-control mt-2" type="number" id="min_price" name="min_price"
