@@ -4,9 +4,6 @@ import { HttpClient } from '@angular/common/http';
 import { ClientService } from './client-api.service'
 import { Router } from '@angular/router';
 
-import { CityService } from './city.service';
-import { Subject } from 'rxjs';
-import { debounceTime, switchMap } from 'rxjs/operators';
 
 
 interface StringDictionary {
@@ -21,34 +18,7 @@ interface StringDictionary {
 
 export class CustormerListComponent implements OnInit {
 
-  searchSubject = new Subject<string>();
-  cities: any[] = [];
-
-  constructor(private client_api: ClientService, private router: Router, private cityService: CityService) {
-
-    this.searchSubject.pipe(
-      debounceTime(300),
-      switchMap(query => this.cityService.getFrenchCities(query))
-    ).subscribe(response => {
-      console.log(response);  // Adjust based on the structure of the returned data
-    });
-
-  }
-
-  onSearchChange(searchValue: string | undefined): void {
-    if (typeof searchValue !== "undefined") {
-      this.searchSubject.next(searchValue);
-    }
-    else {
-      console.log("Nothing to search for")
-    }
-
-  }
-
-  selectCity(city: any): void {
-    this.form_client.criteres.localisation = city.properties.label;
-    this.cities = [];  // Clear the list of suggestions after selection
-  }
+  constructor(private client_api: ClientService, private router: Router) { }
 
   clients: Client[] = [];
 
