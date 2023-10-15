@@ -10,6 +10,10 @@ interface StringDictionary {
   [index: string]: any;
 }
 
+/**
+ * Composant Angular pour afficher la liste des clients et gérer les opérations associées.
+ */
+
 @Component({
   selector: 'app-custormer-list',
   templateUrl: './custormer-list.component.html',
@@ -19,9 +23,13 @@ interface StringDictionary {
 export class CustormerListComponent implements OnInit {
 
   constructor(private client_api: ClientService, private router: Router) { }
-
+  /**
+   * Composant Angular pour afficher la liste des clients et gérer les opérations associées.
+   */
   clients: Client[] = [];
-
+  /**
+   * Composant Angular pour afficher la liste des clients et gérer les opérations associées.
+   */
   form_client: FormClient = {
     name: '',
     telephone: '',
@@ -38,6 +46,9 @@ export class CustormerListComponent implements OnInit {
     nb_found: 0,
     active: false
   };
+  /**
+   * Nouveau client à créer.
+   */
   new_client: ClientIn = {
     name: '',
     telephone: '',
@@ -54,6 +65,9 @@ export class CustormerListComponent implements OnInit {
     nb_found: 0,
     active: false
   };
+  /**
+   * Client actuellement sélectionné pour la modification.
+   */
   current_client: Client = {
     _id: '',
     name: '',
@@ -71,22 +85,33 @@ export class CustormerListComponent implements OnInit {
     nb_found: 0,
     active: false
   };
-
+  /**
+   * Navigue vers la page de détails d'un client.
+   * @param item - Le client à afficher.
+   */
   navigateTo(item: Client) {
     console.log(item)
     this.router.navigate(['/home/needs', item._id]);
   }
-
+  /**
+   * Méthode appelée lors de l'initialisation du composant.
+   */
   ngOnInit(): void {
     this.loadClients();
   }
-
+  /**
+   * Charge la liste des clients depuis le service.
+   */
   loadClients(): void {
     this.client_api.getClients().subscribe(
       all_clients => this.clients = all_clients,
       error => console.error('Error loading clients', error))
   }
-
+  /**
+     * Obtient une représentation formatée des critères filtrés.
+     * @param criteres - Les critères à filtrer.
+     * @returns Une chaîne de caractères représentant les critères filtrés.
+     */
   getFilteredCriteria(criteres: any): string {
     const filtered: StringDictionary = {};
     for (const key in criteres) {
@@ -104,7 +129,10 @@ export class CustormerListComponent implements OnInit {
 
     return result;
   }
-
+  /**
+     * Soumet le formulaire pour créer ou mettre à jour un client.
+     * @param client - Le client à mettre à jour (facultatif).
+     */
   onSubmit(client?: Client) {
 
     this.new_client = this.formClientToClientIn(this.form_client);
@@ -129,11 +157,19 @@ export class CustormerListComponent implements OnInit {
     console.log(this.clients);
 
   }
-
+  /**
+     * Divise une chaîne de caractères en un tableau en utilisant la virgule comme délimiteur et supprime les espaces autour des éléments.
+     * @param value - La chaîne de caractères à diviser.
+     * @returns Un tableau de chaînes de caractères résultant.
+     */
   splitAndTrim(value: string): string[] {
     return value.split(',').map(item => item.trim());
   }
-
+  /**
+     * Valide et divise les types de biens en fonction de la chaîne de caractères fournie.
+     * @param value - La chaîne de caractères contenant les types de biens.
+     * @returns Un tableau de types de biens valides.
+     */
   validateAndSplitTypeBien(value: string): string[] {
     const types = this.splitAndTrim(value);
     for (const type of types) {
@@ -143,7 +179,10 @@ export class CustormerListComponent implements OnInit {
     }
     return types;
   }
-
+  /**
+     * Supprime un client.
+     * @param cli - Le client à supprimer.
+     */
   deleteClient(cli: Client) {
     // const index = this.clients.indexOf(cli);
     // if (index !== -1) {
@@ -156,13 +195,20 @@ export class CustormerListComponent implements OnInit {
     this.loadClients();
 
   }
-
+  /**
+   * Prépare le formulaire pour la modification d'un client en copiant ses détails.
+   * @param cli - Le client à modifier.
+   */
   editClient(cli: Client): void {
     this.current_client = cli;
     // Copy the details of cli to form_client for editing
     this.form_client = this.clientToFormClient(cli);
   }
-
+  /**
+     * Convertit un client en un formulaire de client pour l'édition.
+     * @param client - Le client à convertir.
+     * @returns Le formulaire de client résultant.
+     */
   clientToFormClient(client: Client): FormClient {
     return {
       name: client.name,
@@ -182,14 +228,19 @@ export class CustormerListComponent implements OnInit {
     };
   }
 
+  /**
+   * Convertit un formulaire de client en un objet de type ClientIn.
+   * @param formClient - Le formulaire de client à convertir.
+   * @returns Un objet de type ClientIn résultant de la conversion.
+   */
   formClientToClientIn(formClient: FormClient): ClientIn {
     return {
       name: formClient.name,
       telephone: formClient.telephone,
       email: formClient.email,
       criteres: {
-        localisation: formClient.criteres.localisation.split(', ').map(s => s.trim()),
-        code_postal: formClient.criteres.code_postal.split(', ').map(s => s.trim()),
+        localisation: formClient.criteres.localisation.split(', ').map(s => s.trim().toLowerCase()),
+        code_postal: formClient.criteres.code_postal.split(', ').map(s => s.trim().toLowerCase()),
         type_bien: formClient.criteres.type_bien,
         max_price: String(formClient.criteres.max_price),
         min_price: String(formClient.criteres.min_price),
@@ -201,9 +252,11 @@ export class CustormerListComponent implements OnInit {
     };
   }
 
-  // Assuming you have initialized form_client.criteres.type_bien as an array.
-  // Initialize it like: form_client.criteres.type_bien = [];
-
+  /**
+     * Met à jour le type de bien dans le formulaire en fonction de la sélection de l'utilisateur.
+     * @param event - L'événement de sélection.
+     * @param type - Le type de bien à mettre à jour.
+     */
   updateTypeBien(event: any, type: string) {
     if (event.target.checked) {
       // Add the type to the array if it's checked.
